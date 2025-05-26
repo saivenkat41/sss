@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dynamic Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --accent-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: var(--light-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .voice-control {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-control:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .voice-control i {
+            color: var(--light-color);
+            font-size: 18px;
+        }
+
+        .voice-feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 80px 0;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 40px;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .change-dp-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .change-dp-btn:hover {
+            transform: scale(1.1);
+            background: #c0392b;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .skill-category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .skill-category h3 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: var(--primary-color);
+        }
+
+        .skill-item {
+            margin-bottom: 15px;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .add-skill-btn {
+            display: block;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .add-skill-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .internships-container, .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .internship-card, .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .internship-card:hover, .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .internship-img, .project-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .internship-details, .project-details {
+            padding: 20px;
+        }
+
+        .internship-details h3, .project-details h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .internship-company, .project-tech {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .internship-duration, .project-date {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .internship-description, .project-description {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .add-internship-btn, .add-project-btn {
+            display: block;
+            margin: 30px auto 0;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-internship-btn:hover, .add-project-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--dark-color);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--light-color);
+        }
+
+        .modal-title {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .save-btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            background: #27ae60;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 80px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 20px;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 10px;
+            }
+
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                padding: 40px 0;
+            }
+
+            .hero-content {
+                padding-right: 0;
+                margin-top: 40px;
+            }
+
+            .profile-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .skills-container, .internships-container, .projects-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .dp-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+        
+        .dp-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles-js"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">Portfolio</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#internships">Internships</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="voice-control" id="voiceControl">
+                <i class="fas fa-microphone"></i>
+            </div>
+        </header>
+
+        <div class="voice-feedback" id="voiceFeedback">
+            Listening: <span id="voiceCommand"></span>
+        </div>
+
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Hi, I'm <span >Kedari SaiVenkat</span></h1>
+                <p >Java Full Stack Developer | Tech Enthusiast | Problem Solver</p>
+                <p >I develop robust Java full-stack applications with a passion for clean code, efficient solutions, and continuous learning. Let’s build impactful technology together!</p>
+                <a href="#contact" class="btn">Get In Touch</a>
+            </div>
+            <div class="profile-container">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="profile-pic" id="profilePic">
+                <button class="change-dp-btn" id="changeDpBtn">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            
+            <!-- Hidden Modal for Upload -->
+            <div id="dpModal" class="dp-modal" style="display:none;">
+                <div class="dp-modal-content">
+                    <span class="close-modal" style="cursor:pointer;">&times;</span>
+                    <input type="file" id="dpFileInput" accept="image/*" />
+                    <button id="saveDpBtn">Save</button>
+                </div>
+            </div>
+            
+        </section>
+
+        <section id="about">
+            <div class="section-title">
+                <h2>About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3 id="aboutTitle">Who Am I?</h3>
+                    <p id="aboutText1">I'm a passionate developer with over 5 years of experience in building web applications. My journey in tech started when I was just 15 years old, and I've been hooked ever since.</p>
+                    <p id="aboutText2">When I'm not coding, you can find me hiking in the mountains, reading sci-fi novels, or experimenting with new recipes in the kitchen. I believe in continuous learning and pushing boundaries.</p>
+                    <p id="aboutText3">My approach to development is user-centric - I always put the end-user experience first while ensuring the technical foundation is solid and scalable.</p>
+                    <button class="btn" id="editAboutBtn">Edit About Section</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="section-title">
+                <h2>My Skills</h2>
+            </div>
+            <div class="skills-container" id="skillsContainer">
+                <!-- Skills will be added dynamically -->
+            </div>
+            <button class="add-skill-btn" id="addSkillBtn">
+                <i class="fas fa-plus"></i> Add New Skill Category
+            </button>
+        </section>
+
+        <section id="internships">
+            <div class="section-title">
+                <h2>Internships</h2>
+            </div>
+            <div class="internships-container" id="internshipsContainer">
+                <!-- Internships will be added dynamically -->
+            </div>
+            <button class="add-internship-btn" id="addInternshipBtn">
+                <i class="fas fa-plus"></i> Add New Internship
+            </button>
+        </section>
+
+        <section id="projects">
+            <div class="section-title">
+                <h2>Projects</h2>
+            </div>
+            <div class="projects-container" id="projectsContainer">
+                <!-- Projects will be added dynamically -->
+            </div>
+            <button class="add-project-btn" id="addProjectBtn">
+                <i class="fas fa-plus"></i> Add New Project
+            </button>
+        </section>
+
+        <section id="contact">
+            <div class="section-title">
+                <h2>Get In Touch</h2>
+            </div>
+            <div style="text-align: center;">
+                <p>Feel free to reach out for collaborations or just a friendly hello</p>
+                <a href="mailto:contact@example.com" class="btn" style="margin-top: 20px;">Send Email</a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>&copy; <span id="currentYear"></span> My Portfolio. All rights reserved.</p>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="dpModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Change Profile Picture</h3>
+            <div class="form-group">
+                <label for="newDpUrl">Image URL</label>
+                <input type="text" id="newDpUrl" placeholder="https://example.com/image.jpg">
+            </div>
+            <button class="save-btn" id="saveDpBtn">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Edit About Section</h3>
+            <div class="form-group">
+                <label for="editAboutTitle">Title</label>
+                <input type="text" id="editAboutTitle" value="Who Am I?">
+            </div>
+            <div class="form-group">
+                <label for="editAboutText1">Paragraph 1</label>
+                <textarea id="editAboutText1"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editAboutText2">Paragraph 2</label>
+                <textarea id="editAboutText2"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editAboutText3">Paragraph 3</label>
+                <textarea id="editAboutText3"></textarea>
+            </div>
+            <button class="save-btn" id="saveAboutBtn">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="modal" id="skillModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title" id="skillModalTitle">Add New Skill Category</h3>
+            <div class="form-group">
+                <label for="skillCategory">Category Name</label>
+                <input type="text" id="skillCategory" placeholder="e.g. Web Development">
+            </div>
+            <div id="skillItemsContainer">
+                <!-- Skill items will be added here -->
+            </div>
+            <button class="btn" style="margin-bottom: 20px;" id="addSkillItemBtn">
+                <i class="fas fa-plus"></i> Add Skill Item
+            </button>
+            <button class="save-btn" id="saveSkillBtn">Save Category</button>
+        </div>
+    </div>
+
+    <div class="modal" id="internshipModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title" id="internshipModalTitle">Add New Internship</h3>
+            <div class="form-group">
+                <label for="internshipTitle">Title</label>
+                <input type="text" id="internshipTitle" placeholder="Software Development Intern">
+            </div>
+            <div class="form-group">
+                <label for="internshipCompany">Company</label>
+                <input type="text" id="internshipCompany" placeholder="Tech Corp Inc.">
+            </div>
+            <div class="form-group">
+                <label for="internshipDuration">Duration</label>
+                <input type="text" id="internshipDuration" placeholder="June 2022 - August 2022">
+            </div>
+            <div class="form-group">
+                <label for="internshipImage">Image URL</label>
+                <input type="text" id="internshipImage" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label for="internshipDescription">Description</label>
+                <textarea id="internshipDescription" placeholder="Describe your internship experience"></textarea>
+            </div>
+            <button class="save-btn" id="saveInternshipBtn">Save Internship</button>
+        </div>
+    </div>
+
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title" id="projectModalTitle">Add New Project</h3>
+            <div class="form-group">
+                <label for="projectTitle">Title</label>
+                <input type="text" id="projectTitle" placeholder="E-commerce Website">
+            </div>
+            <div class="form-group">
+                <label for="projectTech">Technologies Used</label>
+                <input type="text" id="projectTech" placeholder="React, Node.js, MongoDB">
+            </div>
+            <div class="form-group">
+                <label for="projectDate">Date</label>
+                <input type="text" id="projectDate" placeholder="January 2023">
+            </div>
+            <div class="form-group">
+                <label for="projectImage">Image URL</label>
+                <input type="text" id="projectImage" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label for="projectDescription">Description</label>
+                <textarea id="projectDescription" placeholder="Describe your project"></textarea>
+            </div>
+            <button class="save-btn" id="saveProjectBtn">Save Project</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.3,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.2,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+            // Initialize data and event listeners
+            initializeData();
+            setupEventListeners();
+            initVoiceRecognition();
+        });
+        
+        // Data structure to store all portfolio data
+        let portfolioData = {
+            profilePic: '',
+            about: {
+                title: 'Who Am I?',
+                text1: "I'm a passionate developer with over 5 years of experience in building web applications. My journey in tech started when I was just 15 years old, and I've been hooked ever since.",
+                text2: "When I'm not coding, you can find me hiking in the mountains, reading sci-fi novels, or experimenting with new recipes in the kitchen. I believe in continuous learning and pushing boundaries.",
+                text3: "My approach to development is user-centric - I always put the end-user experience first while ensuring the technical foundation is solid and scalable."
+            },
+            skills: [],
+            internships: [],
+            projects: []
+        };
+        let currentEditingProjectIndex = -1;
+let currentEditingInternshipIndex = -1;
+let currentEditingSkillIndex = -1;
+
+function openEditProjectModal(index) {
+    const project = portfolioData.projects[index];
+    document.getElementById('projectModalTitle').textContent = 'Edit Project';
+    document.getElementById('projectTitle').value = project.title;
+    document.getElementById('projectTech').value = project.tech;
+    document.getElementById('projectDate').value = project.date;
+    document.getElementById('projectImage').value = project.image;
+    document.getElementById('projectDescription').value = project.description;
+    document.getElementById('projectModal').style.display = 'flex';
+    
+    currentEditingProjectIndex = index;
+}
+
+function openEditInternshipModal(index) {
+    const internship = portfolioData.internships[index];
+    document.getElementById('internshipModalTitle').textContent = 'Edit Internship';
+    document.getElementById('internshipTitle').value = internship.title;
+    document.getElementById('internshipCompany').value = internship.company;
+    document.getElementById('internshipDuration').value = internship.duration;
+    document.getElementById('internshipImage').value = internship.image;
+    document.getElementById('internshipDescription').value = internship.description;
+    document.getElementById('internshipModal').style.display = 'flex';
+    
+    currentEditingInternshipIndex = index;
+}
+
+function openEditSkillModal(index) {
+    const skillCategory = portfolioData.skills[index];
+    document.getElementById('skillModalTitle').textContent = 'Edit Skill Category';
+    document.getElementById('skillCategory').value = skillCategory.category;
+    
+    const skillItemsContainer = document.getElementById('skillItemsContainer');
+    skillItemsContainer.innerHTML = '';
+    
+    skillCategory.skills.forEach(skill => {
+        const skillItem = document.createElement('div');
+        skillItem.className = 'skill-item-form';
+        skillItem.innerHTML = `
+            <div class="form-group">
+                <label>Skill Name</label>
+                <input type="text" class="skill-item-name" value="${skill.name}" placeholder="e.g. JavaScript">
+            </div>
+            <div class="form-group">
+                <label>Skill Level (0-100)</label>
+                <input type="number" class="skill-item-level" value="${skill.level}" placeholder="e.g. 80" min="0" max="100">
+            </div>
+            <button class="btn remove-skill-item-btn">Remove</button>
+        `;
+        
+        skillItemsContainer.appendChild(skillItem);
+        
+        // Add event listener to remove button
+        skillItem.querySelector('.remove-skill-item-btn').addEventListener('click', function() {
+            skillItemsContainer.removeChild(skillItem);
+        });
+    });
+    
+    document.getElementById('skillModal').style.display = 'flex';
+    currentEditingSkillIndex = index;
+}
+        
+        // Initialize data from localStorage or default data
+        function initializeData() {
+            // Load from localStorage if available
+            const savedData = localStorage.getItem('portfolioData');
+            if (savedData) {
+                portfolioData = JSON.parse(savedData);
+            } else {
+                // Set default data if no saved data exists
+                portfolioData.skills = [
+                    {
+                        category: "Web Development",
+                        skills: [
+                            { name: "HTML/CSS", level: 90 },
+                            { name: "JavaScript", level: 85 },
+                            { name: "React", level: 80 },
+                            { name: "Node.js", level: 75 }
+                        ]
+                    },
+                    {
+                        category: "Design",
+                        skills: [
+                            { name: "UI/UX Design", level: 85 },
+                            { name: "Figma", level: 80 },
+                            { name: "Adobe XD", level: 70 }
+                        ]
+                    },
+                    {
+                        category: "Languages",
+                        skills: [
+                            { name: "Python", level: 80 },
+                            { name: "Java", level: 70 },
+                            { name: "C++", level: 65 }
+                        ]
+                    }
+                ];
+                
+                portfolioData.internships = [
+                    {
+                        title: "Software Development Intern",
+                        company: "Tech Solutions Inc.",
+                        duration: "June 2022 - August 2022",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                        description: "Worked on developing new features for the company's flagship product using React and Node.js. Collaborated with a team of 5 developers to implement responsive designs and improve application performance."
+                    },
+                    {
+                        title: "UI/UX Design Intern",
+                        company: "Creative Designs Co.",
+                        duration: "May 2021 - July 2021",
+                        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                        description: "Designed wireframes and prototypes for client projects using Figma. Conducted user research and usability testing to improve product designs. Assisted senior designers in creating design systems."
+                    }
+                ];
+                
+                portfolioData.projects = [
+                    {
+                        title: "E-commerce Platform",
+                        tech: "React, Node.js, MongoDB",
+                        date: "January 2023",
+                        image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                        description: "A full-stack e-commerce platform with user authentication, product catalog, shopping cart, and payment integration. Implemented responsive design and optimized for performance."
+                    },
+                    {
+                        title: "Task Management App",
+                        tech: "Vue.js, Firebase",
+                        date: "October 2022",
+                        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                        description: "A collaborative task management application with real-time updates, drag-and-drop interface, and team collaboration features. Built with Vue.js and Firebase for backend services."
+                    },
+                    {
+                        title: "Weather Dashboard",
+                        tech: "JavaScript, API Integration",
+                        date: "June 2022",
+                        image: "https://images.unsplash.com/photo-1601134467661-3d775b999c8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+                        description: "A weather dashboard that displays current and forecasted weather for any location. Uses the OpenWeatherMap API to fetch data and displays it in an intuitive interface."
+                    }
+                ];
+                
+                // Save the default data
+                saveData();
+            }
+        
+            // Set profile picture
+            if (portfolioData.profilePic) {
+                document.getElementById('profilePic').src = portfolioData.profilePic;
+            }
+            
+           
+        
+            // Set about section
+            document.getElementById('aboutTitle').textContent = portfolioData.about.title;
+            document.getElementById('aboutText1').textContent = portfolioData.about.text1;
+            document.getElementById('aboutText2').textContent = portfolioData.about.text2;
+            document.getElementById('aboutText3').textContent = portfolioData.about.text3;
+
+            // Render skills
+            renderSkills();
+            // Render internships
+            renderInternships();
+            
+            // Render projects
+            renderProjects();
+        }
+        
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+        }
+        
+        // Render skills to the DOM
+        function renderSkills() {
+            const skillsContainer = document.getElementById('skillsContainer');
+            skillsContainer.innerHTML = '';
+            
+            portfolioData.skills.forEach((category, index) => {
+                const skillCategoryElement = document.createElement('div');
+                skillCategoryElement.className = 'skill-category';
+                skillCategoryElement.innerHTML = `
+                    <h3>${category.category}</h3>
+                    <div class="skill-items">
+                        ${category.skills.map(skill => `
+                            <div class="skill-item">
+                                <div class="skill-name">
+                                    <span>${skill.name}</span>
+                                    <span>${skill.level}%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: ${skill.level}%"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn edit-skill-btn" data-index="${index}">Edit</button>
+                    <button class="btn delete-skill-btn" data-index="${index}">Delete</button>
+                `;
+                
+                skillsContainer.appendChild(skillCategoryElement);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-skill-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openEditSkillModal(parseInt(this.dataset.index));
+                });
+            });
+            
+            document.querySelectorAll('.delete-skill-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    if (confirm('Are you sure you want to delete this skill category?')) {
+                        portfolioData.skills.splice(index, 1);
+                        saveData();
+                        renderSkills();
+                    }
+                });
+            });
+        }
+        
+        // Render internships to the DOM
+        function renderInternships() {
+            const internshipsContainer = document.getElementById('internshipsContainer');
+            internshipsContainer.innerHTML = '';
+            
+            portfolioData.internships.forEach((internship, index) => {
+                const internshipElement = document.createElement('div');
+                internshipElement.className = 'internship-card';
+                internshipElement.innerHTML = `
+                    <img src="${internship.image}" alt="${internship.title}" class="internship-img">
+                    <div class="internship-details">
+                        <h3>${internship.title}</h3>
+                        <div class="internship-company">${internship.company}</div>
+                        <div class="internship-duration">${internship.duration}</div>
+                        <p class="internship-description">${internship.description}</p>
+                    </div>
+                    <button class="btn edit-internship-btn" data-index="${index}">Edit</button>
+                    <button class="btn delete-internship-btn" data-index="${index}">Delete</button>
+                `;
+                
+                internshipsContainer.appendChild(internshipElement);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-internship-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openEditInternshipModal(parseInt(this.dataset.index));
+                });
+            });
+            
+            document.querySelectorAll('.delete-internship-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    if (confirm('Are you sure you want to delete this internship?')) {
+                        portfolioData.internships.splice(index, 1);
+                        saveData();
+                        renderInternships();
+                    }
+                });
+            });
+        }
+        
+        // Render projects to the DOM
+        function renderProjects() {
+            const projectsContainer = document.getElementById('projectsContainer');
+            projectsContainer.innerHTML = '';
+            
+            portfolioData.projects.forEach((project, index) => {
+                const projectElement = document.createElement('div');
+                projectElement.className = 'project-card';
+                projectElement.innerHTML = `
+                    <img src="${project.image}" alt="${project.title}" class="project-img">
+                    <div class="project-details">
+                        <h3>${project.title}</h3>
+                        <div class="project-tech">${project.tech}</div>
+                        <div class="project-date">${project.date}</div>
+                        <p class="project-description">${project.description}</p>
+                    </div>
+                    <button class="btn edit-project-btn" data-index="${index}">Edit</button>
+                    <button class="btn delete-project-btn" data-index="${index}">Delete</button>
+                `;
+                
+                projectsContainer.appendChild(projectElement);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-project-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    openEditProjectModal(parseInt(this.dataset.index));
+                });
+            });
+            
+            document.querySelectorAll('.delete-project-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    if (confirm('Are you sure you want to delete this project?')) {
+                        portfolioData.projects.splice(index, 1);
+                        saveData();
+                        renderProjects();
+                    }
+                });
+            });
+        }
+        
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Profile picture
+            const profilePic = document.getElementById('profilePic');
+            const dpModal = document.getElementById('dpModal');
+            const changeDpBtn = document.getElementById('changeDpBtn');
+            const saveDpBtn = document.getElementById('saveDpBtn');
+            const fileInput = document.getElementById('dpFileInput');
+            const closeModal = document.querySelector('#dpModal .close-modal');
+        
+            // Show the modal
+            changeDpBtn.addEventListener('click', function() {
+                dpModal.style.display = 'flex';
+            });
+        
+            // Close the modal
+            closeModal.addEventListener('click', function() {
+                dpModal.style.display = 'none';
+            });
+        
+            // Save new DP
+            saveDpBtn.addEventListener('click', function() {
+                const file = fileInput.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        portfolioData.profilePic = e.target.result;
+                        profilePic.src = portfolioData.profilePic;
+                        dpModal.style.display = 'none';
+                        fileInput.value = '';
+                        saveData();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Please select a valid image file.');
+                }
+            });
+            // About section edit
+            document.getElementById('editAboutBtn').addEventListener('click', function() {
+                document.getElementById('editAboutTitle').value = portfolioData.about.title;
+                document.getElementById('editAboutText1').value = portfolioData.about.text1;
+                document.getElementById('editAboutText2').value = portfolioData.about.text2;
+                document.getElementById('editAboutText3').value = portfolioData.about.text3;
+                document.getElementById('aboutModal').style.display = 'flex';
+            });
+            
+            document.getElementById('saveAboutBtn').addEventListener('click', function() {
+                portfolioData.about = {
+                    title: document.getElementById('editAboutTitle').value,
+                    text1: document.getElementById('editAboutText1').value,
+                    text2: document.getElementById('editAboutText2').value,
+                    text3: document.getElementById('editAboutText3').value
+                };
+                
+                document.getElementById('aboutTitle').textContent = portfolioData.about.title;
+                document.getElementById('aboutText1').textContent = portfolioData.about.text1;
+                document.getElementById('aboutText2').textContent = portfolioData.about.text2;
+                document.getElementById('aboutText3').textContent = portfolioData.about.text3;
+                
+                saveData();
+                document.getElementById('aboutModal').style.display = 'none';
+            });
+            
+            document.querySelector('#aboutModal .close-modal').addEventListener('click', function() {
+                document.getElementById('aboutModal').style.display = 'none';
+            });
+            
+            // Skills section
+            document.getElementById('addSkillBtn').addEventListener('click', function() {
+                document.getElementById('skillModalTitle').textContent = 'Add New Skill Category';
+                document.getElementById('skillCategory').value = '';
+                document.getElementById('skillItemsContainer').innerHTML = '';
+                document.getElementById('skillModal').style.display = 'flex';
+                
+                // Reset the modal for adding new category
+                currentEditingSkillIndex = -1;
+            });
+            
+            document.getElementById('addSkillItemBtn').addEventListener('click', function() {
+                const skillItemsContainer = document.getElementById('skillItemsContainer');
+                const newSkillItem = document.createElement('div');
+                newSkillItem.className = 'skill-item-form';
+                newSkillItem.innerHTML = `
+                    <div class="form-group">
+                        <label>Skill Name</label>
+                        <input type="text" class="skill-item-name" placeholder="e.g. JavaScript">
+                    </div>
+                    <div class="form-group">
+                        <label>Skill Level (0-100)</label>
+                        <input type="number" class="skill-item-level" placeholder="e.g. 80" min="0" max="100">
+                    </div>
+                    <button class="btn remove-skill-item-btn">Remove</button>
+                `;
+                
+                skillItemsContainer.appendChild(newSkillItem);
+                
+                // Add event listener to remove button
+                newSkillItem.querySelector('.remove-skill-item-btn').addEventListener('click', function() {
+                    skillItemsContainer.removeChild(newSkillItem);
+                });
+            });
+            
+            let currentEditingSkillIndex = -1;
+            
+            document.getElementById('saveSkillBtn').addEventListener('click', function() {
+                const categoryName = document.getElementById('skillCategory').value;
+                if (!categoryName) {
+                    alert('Please enter a category name');
+                    return;
+                }
+                
+                const skillItems = Array.from(document.querySelectorAll('.skill-item-form')).map(item => {
+                    return {
+                        name: item.querySelector('.skill-item-name').value,
+                        level: parseInt(item.querySelector('.skill-item-level').value)
+                    };
+                }).filter(skill => skill.name && !isNaN(skill.level));
+                
+                if (skillItems.length === 0) {
+                    alert('Please add at least one skill item');
+                    return;
+                }
+                
+                const newSkillCategory = {
+                    category: categoryName,
+                    skills: skillItems
+                };
+                
+                if (currentEditingSkillIndex >= 0) {
+                    // Editing existing category
+                    portfolioData.skills[currentEditingSkillIndex] = newSkillCategory;
+                } else {
+                    // Adding new category
+                    portfolioData.skills.push(newSkillCategory);
+                }
+                
+                saveData();
+                renderSkills();
+                document.getElementById('skillModal').style.display = 'none';
+            });
+            
+            document.querySelector('#skillModal .close-modal').addEventListener('click', function() {
+                document.getElementById('skillModal').style.display = 'none';
+            });
+            
+            // Internships section
+            document.getElementById('addInternshipBtn').addEventListener('click', function() {
+                document.getElementById('internshipModalTitle').textContent = 'Add New Internship';
+                document.getElementById('internshipTitle').value = '';
+                document.getElementById('internshipCompany').value = '';
+                document.getElementById('internshipDuration').value = '';
+                document.getElementById('internshipImage').value = '';
+                document.getElementById('internshipDescription').value = '';
+                document.getElementById('internshipModal').style.display = 'flex';
+                
+                // Reset the modal for adding new internship
+                currentEditingInternshipIndex = -1;
+            });
+            
+            let currentEditingInternshipIndex = -1;
+            
+            function openEditInternshipModal(index) {
+                const internship = portfolioData.internships[index];
+                document.getElementById('internshipModalTitle').textContent = 'Edit Internship';
+                document.getElementById('internshipTitle').value = internship.title;
+                document.getElementById('internshipCompany').value = internship.company;
+                document.getElementById('internshipDuration').value = internship.duration;
+                document.getElementById('internshipImage').value = internship.image;
+                document.getElementById('internshipDescription').value = internship.description;
+                document.getElementById('internshipModal').style.display = 'flex';
+                
+                currentEditingInternshipIndex = index;
+            }
+            
+            document.getElementById('saveInternshipBtn').addEventListener('click', function() {
+                const title = document.getElementById('internshipTitle').value;
+                const company = document.getElementById('internshipCompany').value;
+                const duration = document.getElementById('internshipDuration').value;
+                const image = document.getElementById('internshipImage').value;
+                const description = document.getElementById('internshipDescription').value;
+                
+                if (!title || !company || !duration || !description) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                const newInternship = {
+                    title,
+                    company,
+                    duration,
+                    image: image || 'https://via.placeholder.com/400x200?text=Internship',
+                    description
+                };
+                
+                if (currentEditingInternshipIndex >= 0) {
+                    // Editing existing internship
+                    portfolioData.internships[currentEditingInternshipIndex] = newInternship;
+                } else {
+                    // Adding new internship
+                    portfolioData.internships.push(newInternship);
+                }
+                
+                saveData();
+                renderInternships();
+                document.getElementById('internshipModal').style.display = 'none';
+            });
+            
+            document.querySelector('#internshipModal .close-modal').addEventListener('click', function() {
+                document.getElementById('internshipModal').style.display = 'none';
+            });
+            
+            // Projects section
+            document.getElementById('addProjectBtn').addEventListener('click', function() {
+                document.getElementById('projectModalTitle').textContent = 'Add New Project';
+                document.getElementById('projectTitle').value = '';
+                document.getElementById('projectTech').value = '';
+                document.getElementById('projectDate').value = '';
+                document.getElementById('projectImage').value = '';
+                document.getElementById('projectDescription').value = '';
+                document.getElementById('projectModal').style.display = 'flex';
+                
+                // Reset the modal for adding new project
+                currentEditingProjectIndex = -1;
+            });
+            
+            let currentEditingProjectIndex = -1;
+            
+            function openEditProjectModal(index) {
+                const project = portfolioData.projects[index];
+                document.getElementById('projectModalTitle').textContent = 'Edit Project';
+                document.getElementById('projectTitle').value = project.title;
+                document.getElementById('projectTech').value = project.tech;
+                document.getElementById('projectDate').value = project.date;
+                document.getElementById('projectImage').value = project.image;
+                document.getElementById('projectDescription').value = project.description;
+                document.getElementById('projectModal').style.display = 'flex';
+                
+                currentEditingProjectIndex = index;
+            }
+            
+            document.getElementById('saveProjectBtn').addEventListener('click', function() {
+                const title = document.getElementById('projectTitle').value;
+                const tech = document.getElementById('projectTech').value;
+                const date = document.getElementById('projectDate').value;
+                const image = document.getElementById('projectImage').value;
+                const description = document.getElementById('projectDescription').value;
+                
+                if (!title || !tech || !date || !description) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                const newProject = {
+                    title,
+                    tech,
+                    date,
+                    image: image || 'https://via.placeholder.com/400x200?text=Project',
+                    description
+                };
+                
+                if (currentEditingProjectIndex >= 0) {
+                    // Editing existing project
+                    portfolioData.projects[currentEditingProjectIndex] = newProject;
+                } else {
+                    // Adding new project
+                    portfolioData.projects.push(newProject);
+                }
+                
+                saveData();
+                renderProjects();
+                document.getElementById('projectModal').style.display = 'none';
+            });
+            
+            document.querySelector('#projectModal .close-modal').addEventListener('click', function() {
+                document.getElementById('projectModal').style.display = 'none';
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target.className === 'modal') {
+                    event.target.style.display = 'none';
+                }
+            });
+        }
+        
+        // Voice recognition functionality
+        function initVoiceRecognition() {
+            const voiceControl = document.getElementById('voiceControl');
+            const voiceFeedback = document.getElementById('voiceFeedback');
+            const voiceCommand = document.getElementById('voiceCommand');
+            
+            if ('webkitSpeechRecognition' in window) {
+                const recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                voiceControl.addEventListener('click', function() {
+                    recognition.start();
+                    voiceFeedback.style.display = 'block';
+                    voiceCommand.textContent = '...';
+                    this.querySelector('i').className = 'fas fa-microphone-slash';
+                });
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    voiceCommand.textContent = transcript;
+                    
+                    // Process commands
+                    if (transcript.includes('home')) {
+                        window.location.href = '#home';
+                    } else if (transcript.includes('about')) {
+                        window.location.href = '#about';
+                    } else if (transcript.includes('skills')) {
+                        window.location.href = '#skills';
+                    } else if (transcript.includes('internship') || transcript.includes('experience')) {
+                        window.location.href = '#internships';
+                    } else if (transcript.includes('project')) {
+                        window.location.href = '#projects';
+                    } else if (transcript.includes('contact')) {
+                        window.location.href = '#contact';
+                    } else if (transcript.includes('edit about')) {
+                        document.getElementById('editAboutBtn').click();
+                    } else if (transcript.includes('add skill')) {
+                        document.getElementById('addSkillBtn').click();
+                    } else if (transcript.includes('add internship')) {
+                        document.getElementById('addInternshipBtn').click();
+                    } else if (transcript.includes('add project')) {
+                        document.getElementById('addProjectBtn').click();
+                    } else if (transcript.includes('change picture') || transcript.includes('change profile')) {
+                        document.getElementById('changeDpBtn').click();
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    voiceCommand.textContent = 'Error occurred: ' + event.error;
+                };
+                
+                recognition.onend = function() {
+                    voiceControl.querySelector('i').className = 'fas fa-microphone';
+                    setTimeout(() => {
+                        voiceFeedback.style.display = 'none';
+                    }, 2000);
+                };
+            } else {
+                voiceControl.style.display = 'none';
+            }
+        }
+        
+        // Function to open edit skill modal
+        function openEditSkillModal(index) {
+            const skillCategory = portfolioData.skills[index];
+            document.getElementById('skillModalTitle').textContent = 'Edit Skill Category';
+            document.getElementById('skillCategory').value = skillCategory.category;
+            
+            const skillItemsContainer = document.getElementById('skillItemsContainer');
+            skillItemsContainer.innerHTML = '';
+            
+            skillCategory.skills.forEach(skill => {
+                const skillItem = document.createElement('div');
+                skillItem.className = 'skill-item-form';
+                skillItem.innerHTML = `
+                    <div class="form-group">
+                        <label>Skill Name</label>
+                        <input type="text" class="skill-item-name" value="${skill.name}" placeholder="e.g. JavaScript">
+                    </div>
+                    <div class="form-group">
+                        <label>Skill Level (0-100)</label>
+                        <input type="number" class="skill-item-level" value="${skill.level}" placeholder="e.g. 80" min="0" max="100">
+                    </div>
+                    <button class="btn remove-skill-item-btn">Remove</button>
+                `;
+                
+                skillItemsContainer.appendChild(skillItem);
+                
+                // Add event listener to remove button
+                skillItem.querySelector('.remove-skill-item-btn').addEventListener('click', function() {
+                    skillItemsContainer.removeChild(skillItem);
+                });
+            });
+            
+            document.getElementById('skillModal').style.display = 'flex';
+            currentEditingSkillIndex = index;
+        }
+    </script>
+</body>
+</html>
